@@ -17,11 +17,13 @@ public class EmployeeManager {
                 case 1 -> addEmployee();
                 case 2 -> displayEmployees();
                 case 3 -> searchEmployees();
-                case 4 -> {
+                case 4 -> updateEmployee();
+                case 5 -> deleteEmployee();
+                case 6 -> {
                     running = false;
                     System.out.println("Exiting employee manager.");
                 }
-                default -> System.out.println("Invalid option. Please choose 1-4.");
+                default -> System.out.println("Invalid option. Please choose 1-6.");
             }
         }
 
@@ -33,7 +35,9 @@ public class EmployeeManager {
         System.out.println("1. Add employee");
         System.out.println("2. Display employees");
         System.out.println("3. Search employees");
-        System.out.println("4. Exit");
+        System.out.println("4. Update employee");
+        System.out.println("5. Delete employee");
+        System.out.println("6. Exit");
     }
 
     private static void addEmployee() {
@@ -64,6 +68,32 @@ public class EmployeeManager {
             System.out.printf("%-10d %-25s %-20s %12.2f%n",
                     employee.id, employee.name, employee.department, employee.salary);
         }
+    }
+
+    private static void updateEmployee() {
+        int id = readInt("Enter the ID of the employee to update: ");
+        Employee employee = findById(id);
+        if (employee == null) {
+            System.out.println("Employee not found.");
+            return;
+        }
+
+        employee.name = readRequiredText("New name: ");
+        employee.department = readRequiredText("New department: ");
+        employee.salary = readNonNegativeDouble("New salary: ");
+        System.out.println("Employee updated successfully.");
+    }
+
+    private static void deleteEmployee() {
+        int id = readInt("Enter the ID of the employee to delete: ");
+        Employee employee = findById(id);
+        if (employee == null) {
+            System.out.println("Employee not found.");
+            return;
+        }
+
+        employees.remove(employee);
+        System.out.println("Employee deleted successfully.");
     }
 
     private static void searchEmployees() {
@@ -143,9 +173,9 @@ public class EmployeeManager {
 
     private static class Employee {
         private final int id;
-        private final String name;
-        private final String department;
-        private final double salary;
+        private String name;
+        private String department;
+        private double salary;
 
         private Employee(int id, String name, String department, double salary) {
             this.id = id;
